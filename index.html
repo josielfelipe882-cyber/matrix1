@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Matrix Score - Football Tracker</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00FF41; /* Verde Matrix clássico */
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border: 1px solid #00FF41;
+            box-shadow: 0 0 15px #00FF41;
+            text-align: center;
+        }
+
+        input {
+            background: black;
+            border: 1px solid #00FF41;
+            color: #00FF41;
+            padding: 10px;
+            margin-top: 10px;
+            outline: none;
+            width: 80%;
+        }
+
+        #resultado {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix"></canvas>
+
+    <div class="container">
+        <h1>[ BUSCAR_PARTIDA ]</h1>
+        <input type="text" id="busca" placeholder="Digite o time (ex: Flamengo)...">
+        <div id="resultado">Aguardando entrada de dados...</div>
+    </div>
+
+    <script>
+        // Efeito Matrix de fundo
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#00FF41";
+            ctx.font = fontSize + "px arial";
+
+            drops.forEach((y, i) => {
+                const text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillText(text, i * fontSize, y * fontSize);
+                if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
+        }
+        setInterval(drawMatrix, 50);
+
+        // Lógica de Busca (Simulada)
+        const input = document.getElementById('busca');
+        const display = document.getElementById('resultado');
+
+        input.addEventListener('keyup', (e) => {
+            const time = e.target.value.toLowerCase();
+            if (time.length > 3) {
+                // Aqui no futuro entra a chamada de API
+                display.innerHTML = `> PESQUISANDO: ${time.toUpperCase()}...<br>> STATUS: EM ANDAMENTO (2 - 1)`;
+            } else {
+                display.innerText = "Aguardando entrada de dados...";
+            }
+        });
+    </script>
+</body>
+</html>
